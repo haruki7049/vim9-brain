@@ -53,7 +53,7 @@
                     endif
                   '';
                   packages.testingPackage = {
-                    opt = [ pkgs.vimPlugins.vim-themis ];
+                    start = [ pkgs.vimPlugins.vim-themis ];
                   };
                 };
               })

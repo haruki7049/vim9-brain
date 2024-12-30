@@ -1,5 +1,6 @@
 vim9script
-class Base
+
+export class Base
   var NInputs: number = 0
   var NHiddens: number = 0
   var NOutputs: number = 0
@@ -45,7 +46,7 @@ endclass
 # Creates two-dimensional array, as: [[0.0, 0.0], [0.0, 0.0]]
 # i -> line count
 # j -> column count
-def Matrix(i: number, j: number): list<list<float>>
+export def Matrix(i: number, j: number): list<list<float>>
   var column_list: list<float> = repeat([0.0], i)
   var result: list<list<float>> = []
 
@@ -59,24 +60,10 @@ enddef
 # Creates one-dimensional array, as: [5.0, 5.0, 5.0]
 # i -> column count
 # fill -> A number what you want to fill
-def Vector(i: number, fill: float): list<float>
+export def Vector(i: number, fill: float): list<float>
   return map(repeat([0.0], i), (key, value) => fill)
 enddef
 
-def Random(a: float, b: float): float
+export def Random(a: float, b: float): float
   return (b - a) * rand() + a
 enddef
-
-## Unit Tests
-
-# Matrix
-assert_equal(Matrix(2, 3), [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]])
-assert_equal(Matrix(1, 3), [[0.0, 0.0, 0.0]])
-assert_equal(Matrix(4, 5), [[0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0]])
-
-# Vector
-assert_equal(Vector(4, 1.0), [1.0, 1.0, 1.0, 1.0])
-
-# Base
-var base: Base = Base.new()
-base.Init(1, 1, 1)

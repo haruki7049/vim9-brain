@@ -31,7 +31,32 @@
 
           devShells.default = pkgs.mkShell {
             packages = [
-              pkgs.vim-full
+              (pkgs.vim-full.customize {
+                vimrcConfig = {
+                  customRC = ''
+                    set number
+                    syntax on
+
+                    set autoindent
+                    set smartindent
+                    set smarttab
+                    filetype plugin indent on
+
+                    set tabstop=4 shiftwidth=4 expandtab
+
+                    if has("autocmd")
+                      autocmd filetype vim setlocal tabstop=2 shiftwidth=2 expandtab
+                      autocmd filetype nix setlocal tabstop=2 shiftwidth=2 expandtab
+                      autocmd filetype markdown setlocal tabstop=2 shiftwidth=2 expandtab
+                      autocmd filetype json setlocal tabstop=2 shiftwidth=2 expandtab
+                    endif
+                  '';
+                  packages.testingPackage = {
+                    opt = [ pkgs.vimPlugins.vim-themis ];
+                  };
+                };
+              })
+              pkgs.vimPlugins.vim-themis
               pkgs.nil
             ];
           };

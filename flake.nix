@@ -37,6 +37,7 @@
                     set number
                     syntax on
 
+                    set textwidth=0
                     set autoindent
                     set smartindent
                     set smarttab

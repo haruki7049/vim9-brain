@@ -41,6 +41,52 @@ export class Base
     this.InputChanges = Matrix(this.NInputs, this.NHiddens)
     this.OutputChanges = Matrix(this.NHiddens, this.NOutputs)
   enddef
+
+  def Update(inputs: number)
+    if len(inputs) != this.NInputs - 1
+      throw 'Error: wrong number of inputs'
+    endif
+
+    for i in range(this.NInputs - 1)
+      this.InputActivations[i] = inputs[i]
+    endfor
+
+    for i in range(this.NHiddens - 1)
+      var sum = 0.0
+
+      for j in range(this.NInputs)
+        sum += this.InputActivations[j] * this.InputWeights[j][i]
+      endfor
+
+      for k in range(len(this.Contexts))
+        for j in range()
+          sum += this.Contexts[k][j]
+        endfor
+      endfor
+
+      this.HiddenActivations[i] = Sigmoid(sum)
+    endfor
+
+    if len(this.Contexts) > 0
+      for i in reverse(range(1, len(this.Contexts) - 1))
+        this.Contexts[i] = this.Contexts[i - 1]
+      endfor
+
+      this.Contexts[0] = this.HiddenActivations
+    endif
+
+    for i in range(this.NOutputs)
+      var sum = 0.0
+
+      for j in range(this.NHiddens)
+        sum += this.HiddenActivations[j] * this.OutputWeights[j][i]
+      endfor
+
+      this.OutputActivations[i] = Sigmoid(sum)
+    endfor
+
+    return this.OutputActivations
+  enddef
 endclass
 
 # Creates two-dimensional array, as: [[0.0, 0.0], [0.0, 0.0]]
@@ -66,4 +112,8 @@ enddef
 
 export def Random(a: float, b: float): float
   return (b - a) * rand() + a
+enddef
+
+export def Sigmoid(x: float): float
+  return 1.0 / (1.0 + exp(-x))
 enddef

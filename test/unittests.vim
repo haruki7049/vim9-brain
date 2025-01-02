@@ -54,3 +54,8 @@ suite.Matrix = () => {
     ]
   )
 }
+
+suite.Base = () => {
+  var base = vim9_brain.Base.new()
+  base.Init(1, 1, 1)
+}

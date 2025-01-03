@@ -23,6 +23,10 @@
       perSystem =
         { pkgs, lib, ... }:
         let
+          vim9-brain = pkgs.vimUtils.buildVimPlugin {
+            name = "vim9-brain";
+            src = lib.cleanSource ./.;
+          };
           vim-customized = pkgs.vim-full.customize {
             vimrcConfig = {
               customRC = ''
@@ -72,7 +76,12 @@
           };
 
           checks = {
-            inherit test-runner;
+            inherit vim9-brain test-runner;
+          };
+
+          packages = {
+            inherit vim9-brain;
+            default = vim9-brain;
           };
 
           devShells.default = pkgs.mkShell {

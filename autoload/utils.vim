@@ -1,5 +1,7 @@
 vim9script
 
+export var seed: number = 0
+
 # Creates two-dimensional array, as: [[0.0, 0.0], [0.0, 0.0]]
 # i -> line count
 # j -> column count
@@ -27,4 +29,12 @@ enddef
 
 export def Sigmoid(x: float): float
   return 1.0 / (1.0 + exp(-x))
+enddef
+
+export def Srand(s: number)
+  seed = s
+enddef
+
+export def Dsigmoid(y: float): float
+  return y * (1.0 - y)
 enddef

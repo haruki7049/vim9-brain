@@ -10,7 +10,7 @@ export class Base
   var InputActivations: list<float> = []
   var HiddenActivations: list<float> = []
   var OutputActivations: list<float> = []
-  var Contexts: list<string> = []
+  var Contexts: list<list<float>>> = []
   var InputWeights: list<list<float>> = []
   var OutputWeights: list<list<float>> = []
   var InputChanges: list<list<float>> = []
@@ -44,7 +44,7 @@ export class Base
     this.OutputChanges = utils.Matrix(this.NHiddens, this.NOutputs)
   enddef
 
-  def Update(inputs: number)
+  def Update(inputs: list<float>): list<float>
     if len(inputs) != this.NInputs - 1
       throw 'Error: wrong number of inputs'
     endif
@@ -61,7 +61,7 @@ export class Base
       endfor
 
       for k in range(len(this.Contexts))
-        for j in range()
+        for j in range(this.NHiddens - 1)
           sum += this.Contexts[k][j]
         endfor
       endfor
@@ -89,4 +89,79 @@ export class Base
 
     return this.OutputActivations
   enddef
+
+  def BackPropagate(targets: list<float>, lRate: float, mFactor: float): float
+    if len(targets) != this.NOutputs
+      throw 'Error: wrong number of target values'
+    endif
+
+    var outputDeltas = utils.Vector(this.NOutputs, 0.0)
+    for i in range(this.NOutputs)
+      outputDeltas[i] = utils.Dsigmoid(this.OutputActivations[i]) * (targets[i] - this.OutputActivations[i])
+    endfor
+
+    var hiddenDeltas = utils.Vector(this.NHiddens, 0.0)
+    for i in range(this.NHiddens)
+      var e = 0.0
+
+      for j in range(this.NOutputs)
+        e += outputDeltas[j] * this.OutputWeights[i][j]
+      endfor
+      hiddenDeltas[i] = utils.Dsigmoid(this.HiddenActivations[i]) * e
+    endfor
+
+    for i in range(this.NHiddens)
+      for j in range(this.NOutputs)
+        var change = outputDeltas[j] * this.HiddenActivations[i]
+        this.OutputWeights[i][j] = this.OutputWeights[i][j] + (lRate * change) + (mFactor * this.OutputChanges[i][j])
+        this.OutputChanges[i][j] = change
+      endfor
+    endfor
+
+    for i in range(this.NInputs)
+      for j in range(this.NHiddens)
+        var change = hiddenDeltas[j] * this.InputActivations[i]
+        this.InputWeights[i][j] = this.InputWeights[i][j] + (lRate * change) + (mFactor * this.InputChanges[i][j])
+        this.InputChanges[i][j] = change
+      endfor
+    endfor
+
+    var e = 0.0
+
+    for i in range(len(targets))
+      e += 0.5 * pow(targets[i] - this.OutputActivations[i], 2.0)
+    endfor
+
+    return e
+  enddef
+
+  def Train(patterns: list<any>, iterations: number, lRate: float, mFactor: float, debug: bool): list<float>
+    var errors: list<float> = repeat([0.0], iterations)
+
+    for i in range(iterations)
+      var e = 0.0
+      for p in patterns
+        this.Update(p[0])
+        e += this.BackPropagate(p[1], lRate, mFactor)
+      endfor
+
+      errors[i] = e
+
+      if debug && i % 1000 == 0
+        echo i e
+      endif
+    endfor
+
+    return errors
+  enddef
+
+  def Test(patterns: list<any>)
+    for p in patterns
+      echo p[0] "->" this.Update(p[0]) " : " p[1]
+    endfor
+  enddef
 endclass
+
+export def Srand(seed: number)
+  utils.Srand(seed)
+enddef

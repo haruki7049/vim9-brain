@@ -60,7 +60,7 @@
 
             buildPhase = ''
               mkdir -p $out/share
-              find ./test | xargs themis | tee $out/share/themis-result.txt
+              themis -r | tee $out/share/themis-result.txt
             '';
           };
         in

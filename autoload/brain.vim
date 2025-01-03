@@ -1,5 +1,7 @@
 vim9script
 
+import "./utils.vim" as utils
+
 export class Base
   var NInputs: number = 0
   var NHiddens: number = 0
@@ -19,27 +21,27 @@ export class Base
     this.NHiddens = hiddens + 1
     this.NOutputs = outputs
 
-    this.InputActivations = Vector(this.NInputs, 1.0)
-    this.HiddenActivations = Vector(this.NHiddens, 1.0)
-    this.OutputActivations = Vector(this.NOutputs, 1.0)
+    this.InputActivations = utils.Vector(this.NInputs, 1.0)
+    this.HiddenActivations = utils.Vector(this.NHiddens, 1.0)
+    this.OutputActivations = utils.Vector(this.NOutputs, 1.0)
 
-    this.InputWeights = Matrix(this.NInputs, this.NHiddens)
-    this.OutputWeights = Matrix(this.NHiddens, this.NOutputs)
+    this.InputWeights = utils.Matrix(this.NInputs, this.NHiddens)
+    this.OutputWeights = utils.Matrix(this.NHiddens, this.NOutputs)
 
     for i in range(this.NInputs)
       for j in range(this.NHiddens)
-        this.InputWeights[i][j] = Random(-1.0, 1.0)
+        this.InputWeights[i][j] = utils.Random(-1.0, 1.0)
       endfor
     endfor
 
     for i in range(this.NHiddens)
       for j in range(this.NOutputs)
-        this.OutputWeights[i][j] = Random(-1.0, 1.0)
+        this.OutputWeights[i][j] = utils.Random(-1.0, 1.0)
       endfor
     endfor
 
-    this.InputChanges = Matrix(this.NInputs, this.NHiddens)
-    this.OutputChanges = Matrix(this.NHiddens, this.NOutputs)
+    this.InputChanges = utils.Matrix(this.NInputs, this.NHiddens)
+    this.OutputChanges = utils.Matrix(this.NHiddens, this.NOutputs)
   enddef
 
   def Update(inputs: number)
@@ -64,7 +66,7 @@ export class Base
         endfor
       endfor
 
-      this.HiddenActivations[i] = Sigmoid(sum)
+      this.HiddenActivations[i] = utils.Sigmoid(sum)
     endfor
 
     if len(this.Contexts) > 0
@@ -82,38 +84,9 @@ export class Base
         sum += this.HiddenActivations[j] * this.OutputWeights[j][i]
       endfor
 
-      this.OutputActivations[i] = Sigmoid(sum)
+      this.OutputActivations[i] = utils.Sigmoid(sum)
     endfor
 
     return this.OutputActivations
   enddef
 endclass
-
-# Creates two-dimensional array, as: [[0.0, 0.0], [0.0, 0.0]]
-# i -> line count
-# j -> column count
-export def Matrix(i: number, j: number): list<list<float>>
-  var column_list: list<float> = repeat([0.0], i)
-  var result: list<list<float>> = []
-
-  for _ in column_list
-    add(result, repeat([0.0], j))
-  endfor
-
-  return result
-enddef
-
-# Creates one-dimensional array, as: [5.0, 5.0, 5.0]
-# i -> column count
-# fill -> A number what you want to fill
-export def Vector(i: number, fill: float): list<float>
-  return map(repeat([0.0], i), (key, value) => fill)
-enddef
-
-export def Random(a: float, b: float): float
-  return (b - a) * rand() + a
-enddef
-
-export def Sigmoid(x: float): float
-  return 1.0 / (1.0 + exp(-x))
-enddef

@@ -1,28 +1,28 @@
 vim9script
 
-import "../autoload/brain.vim" as vim9_brain
+import "../autoload/utils.vim" as utils
 
 var suite = themis#suite('Test for my plugin')
 var assert = themis#helper('assert')
 
 suite.Vector = () => {
   assert.equals(
-    vim9_brain.Vector(5, 4.0),
+    utils.Vector(5, 4.0),
     [4.0, 4.0, 4.0, 4.0, 4.0]
   )
   assert.equals(
-    vim9_brain.Vector(9, 1.0),
+    utils.Vector(9, 1.0),
     [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
   )
   assert.equals(
-    vim9_brain.Vector(1, 10.0),
+    utils.Vector(1, 10.0),
     [10.0]
   )
 }
 
 suite.Matrix = () => {
   assert.equals(
-    vim9_brain.Matrix(4, 3),
+    utils.Matrix(4, 3),
     [
       [0.0, 0.0, 0.0],
       [0.0, 0.0, 0.0],
@@ -31,7 +31,7 @@ suite.Matrix = () => {
     ]
   )
   assert.equals(
-    vim9_brain.Matrix(3, 2),
+    utils.Matrix(3, 2),
     [
       [0.0, 0.0],
       [0.0, 0.0],
@@ -39,7 +39,7 @@ suite.Matrix = () => {
     ]
   )
   assert.equals(
-    vim9_brain.Matrix(10, 2),
+    utils.Matrix(10, 2),
     [
       [0.0, 0.0],
       [0.0, 0.0],
@@ -53,9 +53,4 @@ suite.Matrix = () => {
       [0.0, 0.0],
     ]
   )
-}
-
-suite.Base = () => {
-  var base = vim9_brain.Base.new()
-  base.Init(1, 1, 1)
 }

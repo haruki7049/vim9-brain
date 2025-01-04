@@ -6,6 +6,7 @@ This is my memo for vim9-brain development...
 
 I use Nix for creating development environment.
 Use for creating development environment:
+
 ```bash
 nix develop
 # OR
@@ -24,6 +25,7 @@ themis -r
 
 On the other hand, I use Nix for running unit tests.
 Use:
+
 ```bash
 nix flake check
 ```

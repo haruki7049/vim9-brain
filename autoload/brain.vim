@@ -10,7 +10,7 @@ export class Base
   var InputActivations: list<float> = []
   var HiddenActivations: list<float> = []
   var OutputActivations: list<float> = []
-  var Contexts: list<list<float>>> = []
+  var Contexts: list<list<float>> = []
   var InputWeights: list<list<float>> = []
   var OutputWeights: list<list<float>> = []
   var InputChanges: list<list<float>> = []

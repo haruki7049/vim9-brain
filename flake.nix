@@ -65,6 +65,8 @@
 
             buildPhase = ''
               mkdir -p $out/share
+              export LANG=C
+
               themis -r | tee $out/share/themis-result.txt
             '';
           };

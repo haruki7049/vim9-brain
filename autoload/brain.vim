@@ -157,7 +157,7 @@ export class Base
 
   def Test(patterns: list<any>)
     for p in patterns
-      echo p[0] "->" this.Update(p[0]) " : " p[1]
+      echomsg p[0] "->" this.Update(p[0]) " : " p[1]
     endfor
   enddef
 endclass

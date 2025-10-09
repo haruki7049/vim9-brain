@@ -24,7 +24,7 @@ export def Vector(i: number, fill: float): list<float>
 enddef
 
 export def Random(a: float, b: float): float
-  return (b - a) * rand() + a
+  return (b - a) * (rand() % 65536 / 65536.0) + a
 enddef
 
 export def Sigmoid(x: float): float
